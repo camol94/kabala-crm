@@ -1,18 +1,58 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+  <v-app id="inspire">
+    <v-content>
+      <v-container fluid fill-height>
+        <v-layout align-center justify-center>
+          <v-flex xs12 sm8 md4>
+            <v-card class="elevation-12">
+              <v-toolbar dark color="primary">
+                <v-toolbar-title>Logowanie</v-toolbar-title>
+                <v-spacer />
+                <v-tooltip right>
+                  <template v-slot:activator="{ on }">
+                      <v-icon large>account_box</v-icon>
+                  </template>
+                </v-tooltip>
+                
+              </v-toolbar>
+              <v-card-text>
+                <v-form ref="login" v-model="valid">
+                  <v-text-field :rules="notEmptyRule" v-model="login" prepend-icon="person" name="login" label="Login" type="text"></v-text-field>
+                  <v-text-field :rules="notEmptyRule" v-model="password" id="password" prepend-icon="lock" name="password" label="Password" type="password"></v-text-field>
+                </v-form>
+              </v-card-text>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn color="primary" @click.native="submit" :disabled="!valid">Zaloguj</v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-flex>
+        </v-layout>
+      </v-container>
+    </v-content>
+  </v-app>
 </template>
 
 <script>
-// @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
-
-export default {
-  name: 'home',
-  components: {
-    HelloWorld
+  export default {
+    data() {
+      return {
+        notEmptyRule: [
+          v => !!v || 'To pole jest wymagane!'
+        ],
+        login: null,
+        password: null,
+        valid: false
+      }
+    },
+    methods: {
+      submit() {
+        if(this.$refs.login.validate()) {
+          console.log('test')
+          localStorage.setItem('loggedIn', this.login)
+        this.$router.push("/dashboard")
+        }
+      }
+    }
   }
-}
 </script>

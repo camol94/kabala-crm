@@ -1,8 +1,22 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Home from './views/Home.vue'
 
 Vue.use(Router)
+
+const loggedInGuard = (to, from, next) => {
+  if(localStorage.getItem("loggedIn")) {
+    next()
+  } else {
+    next("/")
+  }
+}
+const notLoggedInGuard = (to, from, next) => {
+  if(localStorage.getItem("loggedIn")) {
+    next("/dashboard")
+  } else {
+    next()
+  }
+}
 
 export default new Router({
   mode: 'history',
@@ -11,15 +25,25 @@ export default new Router({
     {
       path: '/',
       name: 'home',
-      component: Home
+      component: () => import('./views/Home.vue'),
+      beforeEnter: notLoggedInGuard 
     },
     {
-      path: '/about',
-      name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (about.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import(/* webpackChunkName: "about" */ './views/About.vue')
+      path: '/dashboard',
+      name: 'dashboard',
+      component: () => import('./views/Dashboard.vue'),
+      beforeEnter: loggedInGuard,
+      children: [
+        {
+          path: '', component: () => import('./views/DashboardHome.vue')
+        },
+        {
+          path: '/pracownicy', name: 'pracownicy', component: () => import('./views/Pracownicy.vue')
+        },
+        {
+          path: '/pojazdy', component: () => import('./views/Pojazdy.vue')
+        }
+      ]
     }
   ]
 })
