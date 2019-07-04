@@ -1,8 +1,8 @@
 <template>          
-  <v-app id="pojazdy">
+  <v-app id="produkty">
     <v-card>
       <v-card-title>
-          Pojazdy
+          Produkty
           <v-spacer></v-spacer>
           <v-text-field
           v-model="search"
@@ -13,18 +13,23 @@
       </v-card-title>
       <v-data-table
       :headers="headers"
-      :items="this.$store.state.pojazdy"
-      :search="search">
+      :items="this.$store.state.produkty"
+      :search="search"
+      rows-per-page-text="Produktów na stronę:">
           <template v-slot:items="props">
-              <td>{{ props.item.model }}</td>
-              <td>{{ props.item.rejestracja }}</td>
-              <td>{{ props.item.oc }}</td>
-              <td>{{ props.item.przeglad }}</td>
+              <td>{{ props.index + 1 }}</td>
+              <td>{{ props.item.nazwa }}</td>
+              <td>{{ props.item.kategoria }}</td>
+              <td>{{ props.item.ilosc }}</td>
+              <td>{{ props.item.uszkodzone }}</td>
               <td>
                 <AkcjeButtons @editItem="editItem(props.item)" @deleteItem="deleteItem(props.item)" 
                     :prop="props.item"/>
               </td>
           </template>
+           <template v-slot:pageText="props">
+            Wyniki {{ props.pageStart }} - {{ props.pageStop }} spośród {{ props.itemsLength }}
+            </template>
           <template v-slot:no-results>
               <v-alert :value="true" color="error" icon="warning">Wyszukiwanie dla frazy "{{search}}" niczego nie znalazło.</v-alert> 
           </template>         
@@ -53,18 +58,20 @@
         <v-card-text>
             <v-container grid-list-md>
               <v-layout wrap>
-                <v-form ref="pojazd">
+                <v-form ref="produkt">
                   <v-flex>
-                  <v-text-field :rules="notEmptyRule" v-model="editedItem.model" label="Model"></v-text-field>
+                  <v-text-field :rules="notEmptyRule" v-model="editedItem.nazwa" label="Nazwa"></v-text-field>
                 </v-flex>
                 <v-flex>
-                  <v-text-field :rules="notEmptyRule" v-model="editedItem.rejestracja" label="Rejestracja"></v-text-field>
+                  <!-- <v-text-field :rules="notEmptyRule" v-model="editedItem.kategoria" label="Kategoria"></v-text-field> -->
+                  <!-- <v-select v-model="editedItem.kategoria" :items="this.$store.state.kategorie"></v-select> -->
+                  <v-autocomplete v-model="editedItem.kategoria" :items="this.$store.state.kategorie" no-data-text="Brak wyników."></v-autocomplete>
                 </v-flex>
                 <v-flex >
-                  <v-text-field :rules="notEmptyRule" v-model="editedItem.oc" label="OC"></v-text-field>
+                  <v-text-field :rules="notEmptyRule" v-model="editedItem.ilosc" label="ilosc"></v-text-field>
                 </v-flex>
                 <v-flex >
-                  <v-text-field :rules="notEmptyRule" v-model="editedItem.przeglad" label="Przegląd"></v-text-field>
+                  <v-text-field :rules="notEmptyRule" v-model="editedItem.uszkodzone" label="Uszkodzone"></v-text-field>
                 </v-flex>
                 </v-form>
               </v-layout>
@@ -88,44 +95,45 @@ import AkcjeButtons from '@/components/AkcjeButtons.vue';
         search: '',
         editedIndex: -1,
         editedItem: {
-          model: '',
-          rejestracja: '',
-          oc: '',
-          przeglad: '',
+          nazwa: '',
+          kategoria: '',
+          ilosc: '',
+          uszkodzone: '',
         },
         defaultItem: {
-          model: '',
-          rejestracja: '',
-          oc: '',
-          przeglad: '',
+          nnazwa: '',
+          kategoria: '',
+          ilosc: '',
+          uszkodzone: '',
         },
         notEmptyRule: [
           v => !!v || 'To pole jest wymagane!'
         ],
         headers: [
-          { text: 'Model', value: 'model' },
-          { text: 'Rejestracja', value: 'rejestracja' },
-          { text: 'OC', value: 'oc'},
-          { text: 'Przegląd', value: 'przeglad'},
-          { text: 'Akcje', value: 'actions', sortable: false }
+            { text: 'LP', value: 'lp', sortable: false},
+            { text: 'Nazwa', value: 'nazwa' },
+            { text: 'Kategoria', value: 'kategoria' },
+            { text: 'Ilość sztuk', value: 'ilosc' },
+            { text: 'Uszkodzone', value: 'uszkodzone'},
+            { text: 'Akcje', value: 'actions', sortable: false }
         ]
       }
     },
     computed: {
       formTitle () {
-        return this.editedIndex === -1 ? 'Dodaj samochód' : 'Edytuj samochód'
+        return this.editedIndex === -1 ? 'Dodaj produkt' : 'Edytuj produkt'
       }
     },
 
     methods: {
       editItem (item) {
-        this.editedIndex = this.$store.state.pojazdy.indexOf(item)
+        this.editedIndex = this.$store.state.produkty.indexOf(item)
         this.editedItem = Object.assign({}, item)
         this.dialog = true
       },
       deleteItem (item) {
-            const index = this.$store.state.pojazdy.indexOf(item)
-            confirm('Are you sure you want to delete this item?') && this.$store.state.pojazdy.splice(index, 1)
+            const index = this.$store.state.produkty.indexOf(item)
+            confirm('Are you sure you want to delete this item?') && this.$store.state.produkty.splice(index, 1)
         },
       close () {
         this.dialog = false
@@ -135,11 +143,11 @@ import AkcjeButtons from '@/components/AkcjeButtons.vue';
         }, 300)
       },
       save () {
-        if(this.$refs.pojazd.validate()) {
+        if(this.$refs.produkt.validate()) {
           if (this.editedIndex > -1) {
-            Object.assign(this.$store.state.pojazdy[this.editedIndex], this.editedItem)
+            Object.assign(this.$store.state.produkty[this.editedIndex], this.editedItem)
           } else {
-            this.$store.state.pojazdy.push(this.editedItem)
+            this.$store.state.produkty.push(this.editedItem)
           }
           this.close()
         }

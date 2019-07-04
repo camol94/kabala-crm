@@ -121,7 +121,7 @@
         { icon: 'directions_bus', text: 'Pojazdy', link: '/pojazdy' },
         { icon: 'local_hotel', text: 'Delegacje', link: '/dashboard'},
         { divider: true},
-        { icon: 'store', text: 'Magazyn', link: '/dashboard'},
+        { icon: 'store', text: 'Magazyn', link: '/magazyn'},
         { icon: 'local_atm', text: 'Cennik', link: '/dashboard'},
         { divider: true},
         { icon: 'settings', text: 'Ustawienia', link: '/dashboard'},

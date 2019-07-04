@@ -56,6 +56,21 @@ export default new Vuex.Store({
         oc: '12.06.2018',
         przeglad: '15.06.2018',
       },
+    ],
+    kategorie: ['Krzesła', 'Stoły', 'Pufy'],
+    produkty: [
+      {
+        nazwa: 'Krzesła Maya White',
+        kategoria: 'Krzesła',
+        ilosc: '2000',
+        uszkodzone: '0'
+      },
+      {
+        nazwa: 'Krzesła Maya White',
+        kategoria: 'Krzesła',
+        ilosc: '2000',
+        uszkodzone: '0'
+      }
     ]
   },
   mutations: {
