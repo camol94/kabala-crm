@@ -44,8 +44,14 @@ export default new Router({
           path: '/pojazdy', component: () => import('./views/Pojazdy.vue')
         },
         {
-          path: '/magazyn', component: () => import('./views/Magazyn.vue')
-        }
+          path: '/magazyn', component: () => import('./views/Magazyn.vue'),
+        },
+        {
+          path: '/produkty', component: () => import ('./views/MagazynProdukty.vue'),
+        },
+        {
+          path: '/kategorie', component: () => import ('./views/MagazynKategorie.vue'),
+        },
       ]
     }
   ]

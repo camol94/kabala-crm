@@ -62,12 +62,28 @@ export default new Vuex.Store({
       {
         nazwa: 'Krzesła Maya White',
         kategoria: 'Krzesła',
+        katId: 1,
         ilosc: '2000',
         uszkodzone: '0'
       },
       {
         nazwa: 'Krzesła Maya White',
         kategoria: 'Krzesła',
+        katId: 1,
+        ilosc: '2000',
+        uszkodzone: '0'
+      },
+      {
+        nazwa: 'Stoły jakieś',
+        kategoria: 'Stoły',
+        katId: 2,
+        ilosc: '2000',
+        uszkodzone: '0'
+      },
+      {
+        nazwa: 'Pufy jakieś',
+        kategoria: 'Pufy',
+        katId: 3,
         ilosc: '2000',
         uszkodzone: '0'
       }

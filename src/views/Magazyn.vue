@@ -1,88 +1,40 @@
 <template>          
-  <v-app id="produkty">
+  <v-app id="magazyn">
     <v-card>
-      <v-card-title>
-          Produkty
-          <v-spacer></v-spacer>
-          <v-text-field
-          v-model="search"
-          label="Szukaj"
-          single-line
-          hide-details
-          append-icon="search"></v-text-field>
-      </v-card-title>
-      <v-data-table
-      :headers="headers"
-      :items="this.$store.state.produkty"
-      :search="search"
-      rows-per-page-text="Produktów na stronę:">
-          <template v-slot:items="props">
-              <td>{{ props.index + 1 }}</td>
-              <td>{{ props.item.nazwa }}</td>
-              <td>{{ props.item.kategoria }}</td>
-              <td>{{ props.item.ilosc }}</td>
-              <td>{{ props.item.uszkodzone }}</td>
-              <td>
-                <AkcjeButtons @editItem="editItem(props.item)" @deleteItem="deleteItem(props.item)" 
-                    :prop="props.item"/>
-              </td>
-          </template>
-           <template v-slot:pageText="props">
-            Wyniki {{ props.pageStart }} - {{ props.pageStop }} spośród {{ props.itemsLength }}
-            </template>
-          <template v-slot:no-results>
-              <v-alert :value="true" color="error" icon="warning">Wyszukiwanie dla frazy "{{search}}" niczego nie znalazło.</v-alert> 
-          </template>         
-      </v-data-table>
+      <v-container
+        fluid
+        grid-list-lg
+      >
+        <v-layout row wrap>
+          <v-flex xs6>
+            <v-card>
+              <v-card-title primary-title>
+                <div>
+                  <div class="headline">Produkty</div>
+                  <span>Jest {{this.$store.state.produkty.length}} produktów w {{this.$store.state.kategorie.length}} kategoriach.</span>
+                </div>
+              </v-card-title>
+              <v-card-actions>
+                <v-btn color="info" @click="$router.push('/produkty')">Otwórz liste produktów</v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-flex>
+          <v-flex xs6>
+            <v-card>
+              <v-card-title primary-title>
+                <div>
+                  <div class="headline">Kategorie</div>
+                  <span>Lista wszystkich kategorii produktów.</span>
+                </div>
+              </v-card-title>
+              <v-card-actions>
+                <v-btn color="info" @click="$router.push('/kategorie')">Otwórz liste kategorii</v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-flex>
+        </v-layout>
+      </v-container>
     </v-card>
-    <v-btn
-      fab
-      bottom
-      right
-      color="pink"
-      dark
-      fixed
-      @click="dialog = !dialog"
-    >
-      <v-icon>add</v-icon>
-    </v-btn>
-    <v-dialog v-model="dialog" persistent width="400px">
-      <v-card>
-        <v-card-title
-          class="grey lighten-4 py-4 title"
-        >
-          {{formTitle}}
-          <v-spacer/>
-          <v-icon @click="close()">close</v-icon>
-        </v-card-title>
-        <v-card-text>
-            <v-container grid-list-md>
-              <v-layout wrap>
-                <v-form ref="produkt">
-                  <v-flex>
-                  <v-text-field :rules="notEmptyRule" v-model="editedItem.nazwa" label="Nazwa"></v-text-field>
-                </v-flex>
-                <v-flex>
-                  <!-- <v-text-field :rules="notEmptyRule" v-model="editedItem.kategoria" label="Kategoria"></v-text-field> -->
-                  <!-- <v-select v-model="editedItem.kategoria" :items="this.$store.state.kategorie"></v-select> -->
-                  <v-autocomplete v-model="editedItem.kategoria" :items="this.$store.state.kategorie" no-data-text="Brak wyników."></v-autocomplete>
-                </v-flex>
-                <v-flex >
-                  <v-text-field :rules="notEmptyRule" v-model="editedItem.ilosc" label="ilosc"></v-text-field>
-                </v-flex>
-                <v-flex >
-                  <v-text-field :rules="notEmptyRule" v-model="editedItem.uszkodzone" label="Uszkodzone"></v-text-field>
-                </v-flex>
-                </v-form>
-              </v-layout>
-            </v-container>
-          </v-card-text>
-        <v-card-actions>
-          <v-btn flat color="error" @click="close()">Cancel</v-btn>
-          <v-btn flat color="success" @click="save()">Save</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
   </v-app>
 </template>
 
